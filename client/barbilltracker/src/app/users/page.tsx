@@ -24,8 +24,7 @@ export default function Users() {
                 return formattedUser;
             })
 
-            //setUsers(usersDataFormatted);
-            setUsers([]);
+            setUsers(usersDataFormatted);
         }
 
         fetchUserData().catch(console.error);
@@ -43,7 +42,6 @@ export default function Users() {
     </tr>
 
     return <div>
-        {if (users.length === 0) {}
-        return <table>{usersTableHeaders} {usersTableContent}</table>}
+        {users.length > 0 && <table>{usersTableHeaders} {usersTableContent}</table>}
     </div>;
 }
