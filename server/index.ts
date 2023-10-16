@@ -1,6 +1,6 @@
 import express, { Express, Request, Response } from 'express';
 import dotenv from 'dotenv';
-import { Schema, model, connect } from 'mongoose';
+import { connect } from 'mongoose';
 import Person from './models/Person';
 
 dotenv.config();
