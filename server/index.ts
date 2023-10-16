@@ -1,6 +1,7 @@
 import express, { Express, Request, Response } from 'express';
 import dotenv from 'dotenv';
 import { Schema, model, connect } from 'mongoose';
+import Person from './models/Person';
 
 dotenv.config();
 
@@ -9,32 +10,6 @@ app.use(express.json())
 
 const port = process.env.PORT;
 const dbPassword = process.env.DBPASSWORD;
-
-enum personRole {
-  Landwerk,
-  Waterwerk,
-  Groendienst,
-  Ondersteuning,
-  Stam
-}
-
-type TPerson = {
-  firstName: string;
-  lastName: string;
-  email: string;
-  role?: personRole;
-}
-
-// 2. Create a Schema corresponding to the document interface.
-const personSchema = new Schema<TPerson>({
-  firstName: { type: String, required: true },
-  lastName: { type: String, required: true },
-  email: { type: String, required: true },
-  role: { type: String, required: false}
-});
-
-// 3. Create a Model.
-const Person = model<TPerson>('Person', personSchema);
 
 app.get('/people', async (req: Request, res: Response) => {
   const foundPeople = await Person.find();
@@ -45,6 +20,12 @@ app.post('/people', async (req: Request, res: Response) => {
   const personToCreate = req.body;
   const createdPerson = await Person.create(personToCreate);
   res.json(createdPerson);
+});
+
+app.delete('/people', async (req: Request, res: Response) => {
+  const personIdToDelete: string = req.body.id;
+  const deletedPerson = await Person.findByIdAndDelete(personIdToDelete);
+  res.json(deletedPerson);
 });
 
 app.listen(port, async () => {
