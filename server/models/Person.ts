@@ -22,4 +22,4 @@ const personSchema = new Schema<TPerson>({
     role: { type: String, required: false }
 });
 
-export default model<TPerson>('Person', personSchema);
+export default model<TPerson>('Person', personSchema, 'People');

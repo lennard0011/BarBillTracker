@@ -29,6 +29,6 @@ app.delete('/people', async (req: Request, res: Response) => {
 });
 
 app.listen(port, async () => {
-  await connect(`mongodb+srv://lennardplas:${dbPassword}@barbilltracker.bhsjqsv.mongodb.net/?retryWrites=true&w=majority`)
-  console.log(`⚡️[server]: Server is running at http://localhost:${port}`);
+  await connect(`mongodb+srv://lennardplas:${dbPassword}@barbilltracker.bhsjqsv.mongodb.net/barBillTracker?retryWrites=true&w=majority`)
+  console.log(`⚡️[server]: Server is running at http://localhost:${port}`); 
 });
