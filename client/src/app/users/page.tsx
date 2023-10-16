@@ -11,8 +11,9 @@ export default function Users() {
     const [users, setUsers] = useState<User[]>([]);
 
     useEffect(() => {
+        // TODO: Fix CORS localhost error
         const fetchUserData = async () => {
-            const usersDataResponse = await fetch("https://random-data-api.com/api/v2/users?size=10", {
+            const usersDataResponse = await fetch("http://localhost:8000/people", {
                 method: "GET"
             })
             const usersDataExteral = await usersDataResponse.json()
