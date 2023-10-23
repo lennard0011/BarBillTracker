@@ -11,15 +11,14 @@ export default function Users() {
     const [users, setUsers] = useState<User[]>([]);
 
     useEffect(() => {
-        // TODO: Fix CORS localhost error
         const fetchUserData = async () => {
             const usersDataResponse = await fetch("http://localhost:8000/people", {
                 method: "GET"
             })
             const usersDataExteral = await usersDataResponse.json()
-            const usersDataFormatted = usersDataExteral.map((userData: { first_name: any; email: any; }) => {
+            const usersDataFormatted = usersDataExteral.map((userData: { firstname: any; email: any; }) => {
                 const formattedUser: User = {
-                    name: userData.first_name,
+                    name: userData.firstname,
                     email: userData.email
                 }
                 return formattedUser;
@@ -31,15 +30,20 @@ export default function Users() {
         fetchUserData().catch(console.error);
     }, []);
 
+    function deleteUser() {
+
+    }
+
     // for every user return an entry in a table
 
     const usersTableContent = users.map((user, index) => {
-        return <tr key={index}><td>{user.name}</td><td>{user.email}</td></tr>
+        return <tr key={index}><td>{user.name}</td><td>{user.email}</td><td><button onClick={() => 0}>❌</button></td></tr>
     });
 
     const usersTableHeaders = <tr>
         <th>Name</th>
         <th>E-mail</th>
+        <th>Delete</th>
     </tr>
 
     return <div>
