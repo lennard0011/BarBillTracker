@@ -1,19 +1,25 @@
 import express, { Express, Request, Response } from 'express';
 import dotenv from 'dotenv';
 import { connect } from 'mongoose';
+import cors from 'cors';
+
 import Person from './models/Person';
 
 dotenv.config();
 
-const app: Express = express();
+const app: Express = express(); 
+//test 
+
+app.use(cors())
 app.use(express.json())
+
 
 const port = process.env.PORT;
 const dbPassword = process.env.DBPASSWORD;
 
 app.get('/people', async (req: Request, res: Response) => {
-  const foundPeople = await Person.find();
-  res.json(foundPeople);
+  const foundPeople = await Person.find(); 
+  res.json(foundPeople); 
 });
 
 app.post('/people', async (req: Request, res: Response) => {
