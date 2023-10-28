@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 
 type User = {
+    id: string,
     name: string,
     email: string,
 }
@@ -16,9 +17,10 @@ export default function Users() {
                 method: "GET"
             })
             const usersDataExteral = await usersDataResponse.json()
-            const usersDataFormatted = usersDataExteral.map((userData: { firstname: any; email: any; }) => {
+            const usersDataFormatted = usersDataExteral.map((userData: {_id: string, firstname: string, lastname: string, email: string, }) => {
                 const formattedUser: User = {
-                    name: userData.firstname,
+                    id: userData._id,
+                    name: `${userData.firstname} ${userData.lastname}`,
                     email: userData.email
                 }
                 return formattedUser;
@@ -30,14 +32,20 @@ export default function Users() {
         fetchUserData().catch(console.error);
     }, []);
 
-    function deleteUser() {
-
+    async function deleteUser(userId: string) {
+        console.log(userId)
+        const removedUserResponse = await fetch(`http://localhost:8000/people/${userId}`, {
+            method: "DELETE",            
+        })
+        return removedUserResponse;
     }
 
-    // for every user return an entry in a table
-
     const usersTableContent = users.map((user, index) => {
-        return <tr key={index}><td>{user.name}</td><td>{user.email}</td><td><button onClick={() => 0}>❌</button></td></tr>
+        return <tr key={index}>
+            <td>{user.name}</td>
+            <td>{user.email}</td>
+            <td><button onClick={() => deleteUser(user.id)}>❌</button></td>
+            </tr>
     });
 
     const usersTableHeaders = <tr>

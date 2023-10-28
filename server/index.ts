@@ -22,14 +22,20 @@ app.get('/people', async (req: Request, res: Response) => {
   res.json(foundPeople); 
 });
 
+app.get('/people/:id', async (req: Request, res: Response) => {
+  const id = req.params.id;
+  const foundPeople = await Person.findById(id);
+  res.json(foundPeople); 
+});
+
 app.post('/people', async (req: Request, res: Response) => {
   const personToCreate = req.body;
   const createdPerson = await Person.create(personToCreate);
   res.json(createdPerson);
 });
 
-app.delete('/people', async (req: Request, res: Response) => {
-  const personIdToDelete: string = req.body.id;
+app.delete('/people/:id', async (req: Request, res: Response) => {
+  const personIdToDelete: string = req.params.id;
   const deletedPerson = await Person.findByIdAndDelete(personIdToDelete);
   res.json(deletedPerson);
 });
