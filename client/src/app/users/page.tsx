@@ -43,7 +43,7 @@ export default function Users() {
     }, []);
 
     async function deleteUser(userId: string) {
-        await fetch(`http://localhost:8000/people/${userId}`, {
+        fetch(`http://localhost:8000/people/${userId}`, {
             method: "DELETE",
         })
         setUsers((users) => users.filter((user) => user.id !== userId));
@@ -56,8 +56,8 @@ export default function Users() {
             headers: { "Content-Type": "application/json" }
         })
         const createdUser: User = await newUserResponse.json()
-        setNewUser(initialNewUser);
         setUsers((users) => [...users, createdUser]);
+        setNewUser(initialNewUser);
     }
 
     function createUserOnEnter(event: React.KeyboardEvent<HTMLInputElement>) {
@@ -67,12 +67,32 @@ export default function Users() {
     }
 
     async function updateUser() {
+        if (updatingUser === undefined) {
+            return;
+        }
+        fetch(`http://localhost:8000/people/${updatingUser.id}`, {
+            method: "PUT",
+            body: JSON.stringify(updatingUser),
+            headers: { "Content-Type": "application/json" }
+        })
+        setUsers((users) => users.map((user) => {
+            if (user.id !== updatingUser.id) {
+                return user
+            }
+            return updatingUser;
+        }));
+        setUpdatingUser(undefined);
+    }
 
+    function updateUserOnEnter(event: React.KeyboardEvent<HTMLInputElement>) {
+        if (event.key === 'Enter') {
+            updateUser();
+        }
     }
 
     const usersTableContent = users.map((user, index) => {
         if (user.id === updatingUser?.id) {
-            return updateUserForm(updatingUser);
+            return updateUserForm(user);
         }
         return <tr key={index}>
             <td className="text-center">{user.firstname}</td>
@@ -132,21 +152,21 @@ export default function Users() {
                 <label htmlFor="firstname">
                     <input type="text" value={user.firstname} className="bg-neutral-700" id="firstame" onChange={(e) => {
                         setUpdatingUser({ ...user, firstname: e.target.value })
-                    }} onKeyDown={updateUser} />
+                    }} onKeyDown={updateUserOnEnter} />
                 </label>
             </td>
             <td className="text-center">
                 <label htmlFor="lastname">
                     <input type="text" value={user.lastname} className="bg-neutral-700" id="lastname" onChange={(e) => {
                         setUpdatingUser({ ...user, lastname: e.target.value })
-                    }} onKeyDown={updateUser} />
+                    }} onKeyDown={updateUserOnEnter} />
                 </label>
             </td>
             <td className="text-center">
                 <label htmlFor="email">
                     <input type="text" value={user.email} className="bg-neutral-700" id="email" onChange={(e) => {
                         setUpdatingUser({ ...user, email: e.target.value })
-                    }} onKeyDown={updateUser} />
+                    }} onKeyDown={updateUserOnEnter} />
                 </label>
             </td>
             <td className="text-center"><button onClick={() => deleteUser(user.id)}>❌</button></td>
