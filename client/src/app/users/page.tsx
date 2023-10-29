@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, KeyboardEventHandler } from "react";
 
 type newUser = {
     firstname: string,
@@ -59,6 +59,12 @@ export default function Users() {
         setUsers((users) => [...users, createdUser]);
     }
 
+    function createUserOnEnter(event: React.KeyboardEvent<HTMLInputElement>) {
+        if (event.key === 'Enter') {
+            createUser();
+        }
+    }
+
     const usersTableContent = users.map((user, index) => {
         return <tr key={index}>
             <td>{user.firstname}</td>
@@ -83,7 +89,7 @@ export default function Users() {
                         setNewUser((user) => {
                             return { ...user, firstname: e.target.value }
                         })
-                    }} />
+                    }} onKeyDown={createUserOnEnter} />
                 </label>
             </td>
             <td>
@@ -92,7 +98,7 @@ export default function Users() {
                         setNewUser((user) => {
                             return { ...user, lastname: e.target.value }
                         })
-                    }} />
+                    }} onKeyDown={createUserOnEnter} />
                 </label>
             </td>
             <td>
@@ -101,7 +107,7 @@ export default function Users() {
                         setNewUser((user) => {
                             return { ...user, email: e.target.value }
                         })
-                    }} />
+                    }} onKeyDown={createUserOnEnter} />
                 </label>
             </td>
             <td>
