@@ -9,15 +9,15 @@ enum personRole {
 }
 
 type TPerson = {
-    firstName: string;
-    lastName: string;
+    firstname: string;
+    lastname: string;
     email: string;
     role?: personRole;
 }
 
 const personSchema = new Schema<TPerson>({
-    firstName: { type: String, required: true },
-    lastName: { type: String, required: true },
+    firstname: { type: String, required: true },
+    lastname: { type: String, required: true },
     email: { type: String, required: true },
     role: { type: String, required: false }
 });

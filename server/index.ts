@@ -7,7 +7,7 @@ import Person from './models/Person';
 
 dotenv.config();
 
-const app: Express = express(); 
+const app: Express = express();
 //test 
 
 app.use(cors())
@@ -18,29 +18,37 @@ const port = process.env.PORT;
 const dbPassword = process.env.DBPASSWORD;
 
 app.get('/people', async (req: Request, res: Response) => {
-  const foundPeople = await Person.find(); 
-  res.json(foundPeople); 
+  const foundPeople = await Person.find();
+  res.json(foundPeople);
 });
 
 app.get('/people/:id', async (req: Request, res: Response) => {
   const id = req.params.id;
   const foundPeople = await Person.findById(id);
-  res.json(foundPeople); 
+  res.json(foundPeople);
 });
 
 app.post('/people', async (req: Request, res: Response) => {
-  const personToCreate = req.body;
-  const createdPerson = await Person.create(personToCreate);
-  res.json(createdPerson);
+  try {
+    const personToCreate = req.body;
+    const createdPerson = await Person.create(personToCreate);
+    res.json(createdPerson);
+  } catch {
+    res.status(400);
+  }
 });
 
 app.delete('/people/:id', async (req: Request, res: Response) => {
-  const personIdToDelete: string = req.params.id;
-  const deletedPerson = await Person.findByIdAndDelete(personIdToDelete);
-  res.json(deletedPerson);
+  try {
+    const personIdToDelete: string = req.params.id;
+    const deletedPerson = await Person.findByIdAndDelete(personIdToDelete);
+    res.json(deletedPerson);
+  } catch {
+    res.status(400);
+  }
 });
 
 app.listen(port, async () => {
   await connect(`mongodb+srv://lennardplas:${dbPassword}@barbilltracker.bhsjqsv.mongodb.net/barBillTracker?retryWrites=true&w=majority`)
-  console.log(`⚡️[server]: Server is running at http://localhost:${port}`); 
+  console.log(`⚡️[server]: Server is running at http://localhost:${port}`);
 });

@@ -8,15 +8,17 @@ type newUser = {
     email: string,
 }
 
-type User = newUser & {id: string};
+type User = newUser & { id: string };
+
+const initialNewUser = {
+    firstname: "",
+    lastname: "",
+    email: "",
+}
 
 export default function Users() {
     const [users, setUsers] = useState<User[]>([]);
-    const [newUser, setNewUser] = useState<newUser>({
-         firstname: "First name",
-         lastname: "Last name",
-         email: "email",
-    } );
+    const [newUser, setNewUser] = useState<newUser>(initialNewUser);
 
     useEffect(() => {
         const fetchUserData = async () => {
@@ -30,22 +32,31 @@ export default function Users() {
                     firstname: userData.firstname,
                     lastname: userData.lastname,
                     email: userData.email
-                }
+                };
                 return formattedUser;
             })
 
             setUsers(usersDataFormatted);
         }
-
         fetchUserData().catch(console.error);
     }, []);
 
     async function deleteUser(userId: string) {
-        console.log(userId)
-        const removedUserResponse = await fetch(`http://localhost:8000/people/${userId}`, {
+        await fetch(`http://localhost:8000/people/${userId}`, {
             method: "DELETE",
         })
-        return removedUserResponse;
+        setUsers((users) => users.filter((user) => user.id !== userId));
+    }
+
+    async function createUser() {
+        const newUserResponse = await fetch(`http://localhost:8000/people`, {
+            method: "POST",
+            body: JSON.stringify(newUser),
+            headers: { "Content-Type": "application/json" }
+        })
+        const createdUser: User = await newUserResponse.json()
+        setNewUser(initialNewUser);
+        setUsers((users) => [...users, createdUser]);
     }
 
     const usersTableContent = users.map((user, index) => {
@@ -70,7 +81,7 @@ export default function Users() {
                 <label htmlFor="firstname">
                     <input type="text" value={newUser.firstname} className="bg-neutral-700" id="firstame" onChange={(e) => {
                         setNewUser((user) => {
-                            return {...user, firstname: e.target.value}
+                            return { ...user, firstname: e.target.value }
                         })
                     }} />
                 </label>
@@ -78,27 +89,23 @@ export default function Users() {
             <td>
                 <label htmlFor="lastname">
                     <input type="text" value={newUser.lastname} className="bg-neutral-700" id="lastname" onChange={(e) => {
-                        setNewUser(() => {
-                            newUser.lastname = e.target.value
-                            return newUser
+                        setNewUser((user) => {
+                            return { ...user, lastname: e.target.value }
                         })
-                    }}/>
+                    }} />
                 </label>
             </td>
             <td>
                 <label htmlFor="email">
                     <input type="text" value={newUser.email} className="bg-neutral-700" id="email" onChange={(e) => {
-                        setNewUser(() => {
-                            newUser.email = e.target.value
-                            return newUser
+                        setNewUser((user) => {
+                            return { ...user, email: e.target.value }
                         })
-                    }}/>
+                    }} />
                 </label>
             </td>
             <td>
-                <label>
-                    <input type="submit" value="Submit" />
-                </label>
+                <button onClick={() => createUser()}>Create</button>
             </td>
         </tr>
     }
