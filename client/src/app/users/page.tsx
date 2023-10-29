@@ -111,6 +111,6 @@ export default function Users() {
     }
 
     return <div>
-        {users.length > 0 && <table className="border-separate">{usersTableHeaders} {usersTableContent} {createUserForm()}</table>}
+        {users.length > 0 && <table className="border-separate"><tbody>{usersTableHeaders}{usersTableContent}{createUserForm()}</tbody></table>}
     </div>;
 }
