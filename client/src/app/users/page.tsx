@@ -19,6 +19,7 @@ const initialNewUser = {
 export default function Users() {
     const [users, setUsers] = useState<User[]>([]);
     const [newUser, setNewUser] = useState<newUser>(initialNewUser);
+    const [updatingUser, setUpdatingUser] = useState<User>();
 
     useEffect(() => {
         const fetchUserData = async () => {
@@ -65,12 +66,20 @@ export default function Users() {
         }
     }
 
+    async function updateUser() {
+
+    }
+
     const usersTableContent = users.map((user, index) => {
+        if (user.id === updatingUser?.id) {
+            return updateUserForm(updatingUser);
+        }
         return <tr key={index}>
-            <td>{user.firstname}</td>
-            <td>{user.lastname}</td>
-            <td>{user.email}</td>
-            <td><button onClick={() => deleteUser(user.id)}>❌</button></td>
+            <td className="text-center">{user.firstname}</td>
+            <td className="text-center">{user.lastname}</td>
+            <td className="text-center">{user.email}</td>
+            <td className="text-center"><button onClick={() => deleteUser(user.id)}>❌</button></td>
+            <td className="text-center"><button onClick={() => setUpdatingUser(user)}>✏️</button></td>
         </tr>
     });
 
@@ -79,11 +88,12 @@ export default function Users() {
         <th>Lastname</th>
         <th>E-mail</th>
         <th>Delete</th>
+        <th>Update</th>
     </tr>
 
     function createUserForm() {
         return <tr>
-            <td>
+            <td className="text-center">
                 <label htmlFor="firstname">
                     <input type="text" value={newUser.firstname} className="bg-neutral-700" id="firstame" onChange={(e) => {
                         setNewUser((user) => {
@@ -92,7 +102,7 @@ export default function Users() {
                     }} onKeyDown={createUserOnEnter} />
                 </label>
             </td>
-            <td>
+            <td className="text-center">
                 <label htmlFor="lastname">
                     <input type="text" value={newUser.lastname} className="bg-neutral-700" id="lastname" onChange={(e) => {
                         setNewUser((user) => {
@@ -101,7 +111,7 @@ export default function Users() {
                     }} onKeyDown={createUserOnEnter} />
                 </label>
             </td>
-            <td>
+            <td className="text-center">
                 <label htmlFor="email">
                     <input type="text" value={newUser.email} className="bg-neutral-700" id="email" onChange={(e) => {
                         setNewUser((user) => {
@@ -110,9 +120,37 @@ export default function Users() {
                     }} onKeyDown={createUserOnEnter} />
                 </label>
             </td>
-            <td>
+            <td className="text-center">
                 <button onClick={() => createUser()}>Create</button>
             </td>
+        </tr>
+    }
+
+    function updateUserForm(user: User) {
+        return <tr>
+            <td className="text-center">
+                <label htmlFor="firstname">
+                    <input type="text" value={user.firstname} className="bg-neutral-700" id="firstame" onChange={(e) => {
+                        setUpdatingUser({ ...user, firstname: e.target.value })
+                    }} onKeyDown={updateUser} />
+                </label>
+            </td>
+            <td className="text-center">
+                <label htmlFor="lastname">
+                    <input type="text" value={user.lastname} className="bg-neutral-700" id="lastname" onChange={(e) => {
+                        setUpdatingUser({ ...user, lastname: e.target.value })
+                    }} onKeyDown={updateUser} />
+                </label>
+            </td>
+            <td className="text-center">
+                <label htmlFor="email">
+                    <input type="text" value={user.email} className="bg-neutral-700" id="email" onChange={(e) => {
+                        setUpdatingUser({ ...user, email: e.target.value })
+                    }} onKeyDown={updateUser} />
+                </label>
+            </td>
+            <td className="text-center"><button onClick={() => deleteUser(user.id)}>❌</button></td>
+            <td className="text-center"><button onClick={() => updateUser()}>💾</button></td>
         </tr>
     }
 

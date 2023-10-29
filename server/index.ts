@@ -18,8 +18,12 @@ const port = process.env.PORT;
 const dbPassword = process.env.DBPASSWORD;
 
 app.get('/people', async (req: Request, res: Response) => {
-  const foundPeople = await Person.find();
-  res.json(foundPeople);
+  try {
+    const foundPeople = await Person.find();
+    res.json(foundPeople);
+  } catch {
+    res.status(400);
+  }
 });
 
 app.get('/people/:id', async (req: Request, res: Response) => {
@@ -43,6 +47,17 @@ app.delete('/people/:id', async (req: Request, res: Response) => {
     const personIdToDelete: string = req.params.id;
     const deletedPerson = await Person.findByIdAndDelete(personIdToDelete);
     res.json(deletedPerson);
+  } catch {
+    res.status(400);
+  }
+});
+
+app.put('/people/:id', async (req: Request, res: Response) => {
+  try {
+    const personIdToPut: string = req.params.id;
+    const personUpdateDetails = req.body;
+    const updatedPerson = await Person.findByIdAndUpdate(personIdToPut, personUpdateDetails, {new: true});
+    res.json(updatedPerson);
   } catch {
     res.status(400);
   }
