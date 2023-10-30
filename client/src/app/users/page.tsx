@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useEffect, KeyboardEventHandler } from "react";
+import Link from "next/link";
+import { useState, useEffect } from "react";
 
 type newUser = {
     firstname: string,
@@ -99,7 +100,7 @@ export default function Users() {
             return updateUserForm(user);
         }
         return <tr key={index}>
-            <td className="text-center">{user.firstname}</td>
+            <td className="text-center text-blue-700"><Link href={`/users/${user.id}`}>{user.firstname}</Link></td>
             <td className="text-center">{user.lastname}</td>
             <td className="text-center">{user.email}</td>
             <td className="text-center"><button onClick={() => deleteUser(user.id)}>❌</button></td>
