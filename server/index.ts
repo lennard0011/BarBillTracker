@@ -63,6 +63,17 @@ app.put('/people/:id', async (req: Request, res: Response) => {
   }
 });
 
+app.post('/people/:id/consumption', async (req: Request, res: Response) => {
+  try {
+    const personId: string = req.params.id;
+    const consumptionToCreate = req.body;
+    //const updatedPerson = await Person.create(personId, {$set: {'posts.$[post].replies.$[reply].text': "something1"}}, {new: true});
+    //res.json(updatedPerson);
+  } catch {
+    res.status(400);
+  }
+});
+
 app.listen(port, async () => {
   await connect(`mongodb+srv://lennardplas:${dbPassword}@barbilltracker.bhsjqsv.mongodb.net/barBillTracker?retryWrites=true&w=majority`)
   console.log(`⚡️[server]: Server is running at http://localhost:${port}`);

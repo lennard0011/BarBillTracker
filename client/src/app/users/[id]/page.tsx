@@ -1,3 +1,5 @@
-export default function Users() {
-    return <h1>hellow!</h1>
-}
+export default function User({ params }: { params: { id: string } }) {
+    return <div>My user: {params.id}</div>
+
+
+  }
