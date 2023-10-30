@@ -107,13 +107,15 @@ export default function Users() {
         </tr>
     });
 
-    const usersTableHeaders = <tr>
-        <th>Firstname</th>
-        <th>Lastname</th>
-        <th>E-mail</th>
-        <th>Delete</th>
-        <th>Update</th>
-    </tr>
+    const usersTableHeaders = <thead>
+        <tr>
+            <th>Firstname</th>
+            <th>Lastname</th>
+            <th>E-mail</th>
+            <th>Delete</th>
+            <th>Update</th>
+        </tr>
+    </thead>
 
     function createUserForm() {
         return <tr>
@@ -182,9 +184,9 @@ export default function Users() {
         <div className="flex justify-center items-center">
             <h1>People</h1>
         </div>
-        <hr/>
+        <hr />
         <div className="flex justify-center items-center">
-            {users.length > 0 && <table className="border-separate table-fixed w-4/5    "><thead>{usersTableHeaders}</thead><tbody>{usersTableContent}{createUserForm()}</tbody></table>}
+            {users.length > 0 && <table className="border-separate table-fixed w-4/5">{usersTableHeaders}<tbody>{usersTableContent}{createUserForm()}</tbody></table>}
         </div>
     </div>;
 }
