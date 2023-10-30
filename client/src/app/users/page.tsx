@@ -55,7 +55,11 @@ export default function Users() {
             body: JSON.stringify(newUser),
             headers: { "Content-Type": "application/json" }
         })
-        const createdUser: User = await newUserResponse.json()
+        const createdUserBody = await newUserResponse.json()
+        const createdUser: User = {
+            ...createdUserBody,
+            id: createdUserBody._id
+        }
         setUsers((users) => [...users, createdUser]);
         setNewUser(initialNewUser);
     }
@@ -147,24 +151,24 @@ export default function Users() {
     }
 
     function updateUserForm(user: User) {
-        return <tr>
+        return <tr key={user?.id}>
             <td className="text-center">
                 <label htmlFor="firstname">
-                    <input type="text" value={user.firstname} className="bg-neutral-700" id="firstame" onChange={(e) => {
+                    <input type="text" value={updatingUser?.firstname} className="bg-neutral-700" id="firstame" onChange={(e) => {
                         setUpdatingUser({ ...user, firstname: e.target.value })
                     }} onKeyDown={updateUserOnEnter} />
                 </label>
             </td>
             <td className="text-center">
                 <label htmlFor="lastname">
-                    <input type="text" value={user.lastname} className="bg-neutral-700" id="lastname" onChange={(e) => {
+                    <input type="text" value={updatingUser?.lastname} className="bg-neutral-700" id="lastname" onChange={(e) => {
                         setUpdatingUser({ ...user, lastname: e.target.value })
                     }} onKeyDown={updateUserOnEnter} />
                 </label>
             </td>
             <td className="text-center">
                 <label htmlFor="email">
-                    <input type="text" value={user.email} className="bg-neutral-700" id="email" onChange={(e) => {
+                    <input type="text" value={updatingUser?.email} className="bg-neutral-700" id="email" onChange={(e) => {
                         setUpdatingUser({ ...user, email: e.target.value })
                     }} onKeyDown={updateUserOnEnter} />
                 </label>
@@ -175,6 +179,12 @@ export default function Users() {
     }
 
     return <div>
-        {users.length > 0 && <table className="border-separate"><tbody>{usersTableHeaders}{usersTableContent}{createUserForm()}</tbody></table>}
+        <div className="flex justify-center items-center">
+            <h1>People</h1>
+        </div>
+        <hr/>
+        <div className="flex justify-center items-center">
+            {users.length > 0 && <table className="border-separate table-fixed w-4/5    "><thead>{usersTableHeaders}</thead><tbody>{usersTableContent}{createUserForm()}</tbody></table>}
+        </div>
     </div>;
 }
