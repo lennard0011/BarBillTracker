@@ -4,6 +4,7 @@ import { connect } from 'mongoose';
 import cors from 'cors';
 
 import Person from './models/Person';
+import Product from './models/Product';
 
 dotenv.config();
 
@@ -56,7 +57,7 @@ app.put('/people/:id', async (req: Request, res: Response) => {
   try {
     const personIdToPut: string = req.params.id;
     const personUpdateDetails = req.body;
-    const updatedPerson = await Person.findByIdAndUpdate(personIdToPut, personUpdateDetails, {new: true});
+    const updatedPerson = await Person.findByIdAndUpdate(personIdToPut, personUpdateDetails, { new: true });
     res.json(updatedPerson);
   } catch {
     res.status(400);
@@ -65,13 +66,54 @@ app.put('/people/:id', async (req: Request, res: Response) => {
 
 app.post('/people/:id/consumption', async (req: Request, res: Response) => {
   try {
-    const personId: string = req.params.id;
-    const consumptionToCreate = req.body;
-    //const updatedPerson = await Person.create(personId, {$set: {'posts.$[post].replies.$[reply].text': "something1"}}, {new: true});
-    //res.json(updatedPerson);
+    const id = req.params.id;
+    const foundPerson = await Person.findById(id);
+
+    if (!foundPerson) {
+      throw new Error('Person not found');
+    }
+
+    foundPerson.consumption.push(req.body);
+    foundPerson.save();
+
+    res.json(foundPerson.consumption);
   } catch {
     res.status(400);
   }
+});
+
+app.get('/people/:id/consumption', async (req: Request, res: Response) => {
+  try {
+    const id = req.params.id;
+    const foundPerson = await Person.findById(id);
+
+    if (!foundPerson) {
+      throw new Error('Person not found');
+    }
+
+    res.json(foundPerson.consumption);
+  } catch {
+    res.status(400);
+  }
+});
+
+app.post('/products', async (req: Request, res: Response) => {
+  try {
+    const productToCreate = req.body;
+    const createdProduct = await Product.create(productToCreate);
+    res.json(createdProduct);
+  } catch {
+    res.status(400);
+  }
+})
+
+app.get('/products', async (req: Request, res: Response) => {	
+  try {	
+    const foundProducts = await Product.find();	
+    res.json(foundProducts);	
+  } catch {	
+    res.status(400);	
+  }	
 });
 
 app.listen(port, async () => {
