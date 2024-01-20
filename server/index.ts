@@ -14,9 +14,8 @@ const app: Express = express();
 app.use(cors())
 app.use(express.json())
 
-
-const port = process.env.PORT;
-const dbPassword = process.env.DBPASSWORD;
+const PORT = process.env.PORT;
+const MONGO_URL = process.env.MONGO_URL;
 
 app.get('/people', async (req: Request, res: Response) => {
   try {
@@ -116,7 +115,7 @@ app.get('/products', async (req: Request, res: Response) => {
   }	
 });
 
-app.listen(port, async () => {
-  await connect(`mongodb+srv://lennardplas:${dbPassword}@barbilltracker.bhsjqsv.mongodb.net/barBillTracker?retryWrites=true&w=majority`)
-  console.log(`⚡️[server]: Server is running at http://localhost:${port}`);
+app.listen(PORT, async () => {
+  await connect(MONGO_URL as string);
+  console.log(`⚡️[server]: Server is running at http://localhost:${PORT}`);
 });

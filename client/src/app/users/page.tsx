@@ -18,6 +18,7 @@ const initialNewUser = {
 }
 
 export default function Users() {
+    const [isLoadingUsers, setIsLoadingUsers] = useState<boolean>(true);
     const [users, setUsers] = useState<User[]>([]);
     const [newUser, setNewUser] = useState<newUser>(initialNewUser);
     const [updatingUser, setUpdatingUser] = useState<User>();
@@ -39,6 +40,7 @@ export default function Users() {
             })
 
             setUsers(usersDataFormatted);
+            setIsLoadingUsers(false);
         }
         fetchUserData().catch(console.error);
     }, []);
@@ -187,7 +189,14 @@ export default function Users() {
         </div>
         <hr />
         <div className="flex justify-center items-center">
-            {users.length > 0 && <table className="border-separate table-fixed w-4/5">{usersTableHeaders}<tbody>{usersTableContent}{createUserForm()}</tbody></table>}
+            {isLoadingUsers ? 
+            <p>Loading...</p> :
+            <table className="border-separate table-fixed w-4/5">
+                {usersTableHeaders}
+                <tbody>
+                    {usersTableContent}{createUserForm()}
+                </tbody>
+            </table>}
         </div>
     </div>;
 }
