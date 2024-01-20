@@ -5,19 +5,20 @@ import cors from 'cors';
 
 import Person from './models/Person';
 import Product from './models/Product';
+import { authenticateUser } from './auth/auth';
 
 dotenv.config();
 
 const app: Express = express();
-//test 
 
 app.use(cors())
 app.use(express.json())
 
 const PORT = process.env.PORT;
 const MONGO_URL = process.env.MONGO_URL;
+export const API_KEY = process.env.API_KEY;
 
-app.get('/people', async (req: Request, res: Response) => {
+app.get('/people', authenticateUser, async (req: Request, res: Response) => {
   try {
     const foundPeople = await Person.find();
     res.json(foundPeople);
@@ -115,7 +116,12 @@ app.get('/products', async (req: Request, res: Response) => {
   }	
 });
 
+app.get('/protected-route', authenticateUser, (req: Request, res: Response) => {
+  res.json({ message: 'You are authenticated!' });
+});
+
 app.listen(PORT, async () => {
   await connect(MONGO_URL as string);
   console.log(`⚡️[server]: Server is running at http://localhost:${PORT}`);
+  console.log(`⚡️[server]: API_KEY is ${API_KEY}`);
 });

@@ -18,6 +18,7 @@ const initialNewUser = {
 }
 
 export default function Users() {
+    const [apiKey, setApiKey] = useState<string>("");
     const [isLoadingUsers, setIsLoadingUsers] = useState<boolean>(true);
     const [users, setUsers] = useState<User[]>([]);
     const [newUser, setNewUser] = useState<newUser>(initialNewUser);
@@ -26,7 +27,8 @@ export default function Users() {
     useEffect(() => {
         const fetchUserData = async () => {
             const usersDataResponse = await fetch("http://localhost:8000/people", {
-                method: "GET"
+                method: "GET",
+                headers: { "api-key": apiKey }
             })
             const usersDataExteral = await usersDataResponse.json()
             const usersDataFormatted = usersDataExteral.map((userData: { _id: string, firstname: string, lastname: string, email: string, }) => {
@@ -43,7 +45,7 @@ export default function Users() {
             setIsLoadingUsers(false);
         }
         fetchUserData().catch(console.error);
-    }, []);
+    }, [apiKey]);
 
     async function deleteUser(userId: string) {
         fetch(`http://localhost:8000/people/${userId}`, {
@@ -102,7 +104,7 @@ export default function Users() {
             return updateUserForm(user);
         }
         return <tr key={index}>
-            <td className="text-center text-blue-700"><Link href={`/users/${user.id}`}>{user.firstname}</Link></td>
+            <td className="text-center">{user.firstname}</td>
             <td className="text-center">{user.lastname}</td>
             <td className="text-center">{user.email}</td>
             <td className="text-center"><button onClick={() => deleteUser(user.id)}>❌</button></td>
@@ -119,6 +121,18 @@ export default function Users() {
             <th>Update</th>
         </tr>
     </thead>
+
+    function apiKeyField() {
+        return <div className="flex justify-center items-center">
+            <label htmlFor="apikey">
+                <input type="text" value={apiKey} className="bg-neutral-700" id="apikey" onChange={(e) => {
+                    setApiKey(e.target.value)
+                }} />
+            </label>
+            <button onClick={() => setApiKey("")}>Clear</button>
+        </div>
+    }
+        
 
     function createUserForm() {
         return <tr>
@@ -187,6 +201,7 @@ export default function Users() {
         <div className="flex justify-center items-center">
             <h1>People</h1>
         </div>
+        {apiKeyField()}
         <hr />
         <div className="flex justify-center items-center">
             {isLoadingUsers ? 
