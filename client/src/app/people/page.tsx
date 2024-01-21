@@ -1,6 +1,5 @@
 'use client';
 
-import Link from "next/link";
 import { useState, useEffect } from "react";
 
 type newUser = {
@@ -17,6 +16,8 @@ const initialNewUser = {
     email: "",
 }
 
+const apiDomain = "http://146.190.225.155";
+
 export default function Users() {
     const [apiKey, setApiKey] = useState<string>("");
     const [isLoadingUsers, setIsLoadingUsers] = useState<boolean>(true);
@@ -28,7 +29,7 @@ export default function Users() {
         let timeoutId: string | number | NodeJS.Timeout | undefined;
 
         const fetchUserData = async () => {
-            const usersDataResponse = await fetch("http://localhost:8000/people", {
+            const usersDataResponse = await fetch(`${apiDomain}/people`, {
                 method: "GET",
                 headers: { "api-key": apiKey }
             })
@@ -60,17 +61,18 @@ export default function Users() {
     }, [apiKey]);
 
     async function deleteUser(userId: string) {
-        fetch(`http://localhost:8000/people/${userId}`, {
+        fetch(`${apiDomain}/people/${userId}`, {
             method: "DELETE",
+            headers: { "api-key": apiKey }
         })
         setUsers((users) => users.filter((user) => user.id !== userId));
     }
 
     async function createUser() {
-        const newUserResponse = await fetch(`http://localhost:8000/people`, {
+        const newUserResponse = await fetch(`${apiDomain}/people`, {
             method: "POST",
             body: JSON.stringify(newUser),
-            headers: { "Content-Type": "application/json" }
+            headers: { "Content-Type": "application/json", "api-key": apiKey }
         })
         const createdUserBody = await newUserResponse.json()
         const createdUser: User = {
@@ -91,10 +93,10 @@ export default function Users() {
         if (updatingUser === undefined) {
             return;
         }
-        fetch(`http://localhost:8000/people/${updatingUser.id}`, {
+        fetch(`${apiDomain}/people/${updatingUser.id}`, {
             method: "PUT",
             body: JSON.stringify(updatingUser),
-            headers: { "Content-Type": "application/json" }
+            headers: { "Content-Type": "application/json", "api-key": apiKey }
         })
         setUsers((users) => users.map((user) => {
             if (user.id !== updatingUser.id) {
