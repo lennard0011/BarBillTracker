@@ -27,13 +27,13 @@ app.get('/people', authenticateUser, async (req: Request, res: Response) => {
   }
 });
 
-app.get('/people/:id', async (req: Request, res: Response) => {
+app.get('/people/:id', authenticateUser, async (req: Request, res: Response) => {
   const id = req.params.id;
   const foundPeople = await Person.findById(id);
   res.json(foundPeople);
 });
 
-app.post('/people', async (req: Request, res: Response) => {
+app.post('/people', authenticateUser, async (req: Request, res: Response) => {
   try {
     const personToCreate = req.body;
     const createdPerson = await Person.create(personToCreate);
@@ -43,7 +43,7 @@ app.post('/people', async (req: Request, res: Response) => {
   }
 });
 
-app.delete('/people/:id', async (req: Request, res: Response) => {
+app.delete('/people/:id', authenticateUser, async (req: Request, res: Response) => {
   try {
     const personIdToDelete: string = req.params.id;
     const deletedPerson = await Person.findByIdAndDelete(personIdToDelete);
@@ -53,7 +53,7 @@ app.delete('/people/:id', async (req: Request, res: Response) => {
   }
 });
 
-app.put('/people/:id', async (req: Request, res: Response) => {
+app.put('/people/:id', authenticateUser, async (req: Request, res: Response) => {
   try {
     const personIdToPut: string = req.params.id;
     const personUpdateDetails = req.body;
@@ -64,7 +64,7 @@ app.put('/people/:id', async (req: Request, res: Response) => {
   }
 });
 
-app.post('/people/:id/consumption', async (req: Request, res: Response) => {
+app.post('/people/:id/consumption', authenticateUser, async (req: Request, res: Response) => {
   try {
     const id = req.params.id;
     const foundPerson = await Person.findById(id);
@@ -82,7 +82,7 @@ app.post('/people/:id/consumption', async (req: Request, res: Response) => {
   }
 });
 
-app.get('/people/:id/consumption', async (req: Request, res: Response) => {
+app.get('/people/:id/consumption', authenticateUser, async (req: Request, res: Response) => {
   try {
     const id = req.params.id;
     const foundPerson = await Person.findById(id);
@@ -97,7 +97,7 @@ app.get('/people/:id/consumption', async (req: Request, res: Response) => {
   }
 });
 
-app.post('/products', async (req: Request, res: Response) => {
+app.post('/products', authenticateUser, async (req: Request, res: Response) => {
   try {
     const productToCreate = req.body;
     const createdProduct = await Product.create(productToCreate);
@@ -107,7 +107,7 @@ app.post('/products', async (req: Request, res: Response) => {
   }
 })
 
-app.get('/products', async (req: Request, res: Response) => {	
+app.get('/products', authenticateUser, async (req: Request, res: Response) => {	
   try {	
     const foundProducts = await Product.find();	
     res.json(foundProducts);	
@@ -123,5 +123,4 @@ app.get('/protected-route', authenticateUser, (req: Request, res: Response) => {
 app.listen(PORT, async () => {
   await connect(MONGO_URL as string);
   console.log(`⚡️[server]: Server is running at http://localhost:${PORT}`);
-  console.log(`⚡️[server]: API_KEY is ${API_KEY}`);
 });
