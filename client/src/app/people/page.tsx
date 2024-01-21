@@ -25,6 +25,8 @@ export default function Users() {
     const [updatingUser, setUpdatingUser] = useState<User>();
 
     useEffect(() => {
+        let timeoutId: string | number | NodeJS.Timeout | undefined;
+
         const fetchUserData = async () => {
             const usersDataResponse = await fetch("http://localhost:8000/people", {
                 method: "GET",
@@ -44,7 +46,17 @@ export default function Users() {
             setUsers(usersDataFormatted);
             setIsLoadingUsers(false);
         }
-        fetchUserData().catch(console.error);
+
+        // Delay API fetch by 0.5 seconds
+        if (apiKey) {
+            timeoutId = setTimeout(() => {
+                fetchUserData().catch(console.error);
+            }, 500);
+        }
+
+        return () => {
+            clearTimeout(timeoutId);
+        };
     }, [apiKey]);
 
     async function deleteUser(userId: string) {
