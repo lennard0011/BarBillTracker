@@ -10,6 +10,12 @@ type newUser = {
 
 type User = newUser & { id: string };
 
+enum LoadingState {
+    loading = "LOADING",
+    failed = "FAILED",
+    success = "SUCCESS",
+}
+
 const initialNewUser = {
     firstname: "",
     lastname: "",
@@ -20,7 +26,7 @@ const apiDomain = "http://146.190.225.155";
 
 export default function Users() {
     const [apiKey, setApiKey] = useState<string>("");
-    const [isLoadingUsers, setIsLoadingUsers] = useState<boolean>(true);
+    const [loadingUsersState, setIsLoadingUsers] = useState<LoadingState>(LoadingState.loading);
     const [users, setUsers] = useState<User[]>([]);
     const [newUser, setNewUser] = useState<newUser>(initialNewUser);
     const [updatingUser, setUpdatingUser] = useState<User>();
@@ -45,13 +51,18 @@ export default function Users() {
             })
 
             setUsers(usersDataFormatted);
-            setIsLoadingUsers(false);
+            setIsLoadingUsers(LoadingState.success);
         }
 
         // Delay API fetch by 0.5 seconds
+        setIsLoadingUsers(LoadingState.loading);
+
         if (apiKey) {
-            timeoutId = setTimeout(() => {
-                fetchUserData().catch(console.error);
+            timeoutId = setTimeout(() => {                
+                fetchUserData().catch(() => {
+                    console.error("Failed to fetch users data");
+                    setIsLoadingUsers(LoadingState.failed);
+                });
             }, 500);
         }
 
@@ -218,8 +229,10 @@ export default function Users() {
         {apiKeyField()}
         <hr />
         <div className="flex justify-center items-center">
-            {isLoadingUsers ? 
+            {loadingUsersState === LoadingState.loading ? 
             <p>Loading...</p> :
+            loadingUsersState === LoadingState.failed ? 
+            <p>Failed. Check API key.</p> :
             <table className="border-separate table-fixed w-4/5">
                 {usersTableHeaders}
                 <tbody>
