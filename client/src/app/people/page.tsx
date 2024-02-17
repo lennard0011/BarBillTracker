@@ -22,7 +22,7 @@ const initialNewUser = {
     email: "",
 }
 
-const apiDomain = "http://146.190.225.155";
+const apiDomain = process.env.NEXT_PUBLIC_BACKEND_URL || "http://146.190.225.155";
 
 export default function Users() {
     const [apiKey, setApiKey] = useState<string>("");
@@ -52,6 +52,11 @@ export default function Users() {
 
             setUsers(usersDataFormatted);
             setIsLoadingUsers(LoadingState.success);
+        }
+
+        const localApiKey = localStorage.getItem("apikey");
+        if (localApiKey && apiKey === "") {
+            setApiKey(localApiKey);
         }
 
         // Delay API fetch by 0.5 seconds
@@ -150,8 +155,9 @@ export default function Users() {
     function apiKeyField() {
         return <div className="flex justify-center items-center">
             <label htmlFor="apikey">
-                <input type="text" value={apiKey} className="bg-neutral-700" id="apikey" onChange={(e) => {
+                <input type="password" value={apiKey} className="bg-neutral-700" id="apikey" onChange={(e) => {
                     setApiKey(e.target.value)
+                    localStorage.setItem("apikey", e.target.value);
                 }} />
             </label>
             <button onClick={() => setApiKey("")}>Clear</button>
