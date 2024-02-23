@@ -22,14 +22,14 @@ const initialNewUser = {
     email: "",
 }
 
-const apiDomain = process.env.NEXT_PUBLIC_BACKEND_URL || "http://146.190.225.155";
-
 export default function Users() {
     const [apiKey, setApiKey] = useState<string>("");
     const [loadingUsersState, setIsLoadingUsers] = useState<LoadingState>(LoadingState.loading);
     const [users, setUsers] = useState<User[]>([]);
     const [newUser, setNewUser] = useState<newUser>(initialNewUser);
     const [updatingUser, setUpdatingUser] = useState<User>();
+
+    const apiDomain = process.env.NEXT_PUBLIC_BACKEND_URL || "http://146.190.225.155";
 
     useEffect(() => {
         let timeoutId: string | number | NodeJS.Timeout | undefined;
@@ -74,7 +74,7 @@ export default function Users() {
         return () => {
             clearTimeout(timeoutId);
         };
-    }, [apiKey]);
+    }, [apiDomain, apiKey]);
 
     async function deleteUser(userId: string) {
         fetch(`${apiDomain}/people/${userId}`, {
@@ -155,7 +155,7 @@ export default function Users() {
     function apiKeyField() {
         return <div className="flex justify-center items-center">
             <label htmlFor="apikey">
-                <input type="password" value={apiKey} className="bg-neutral-700" id="apikey" onChange={(e) => {
+                <input type="text" value={apiKey} className="bg-neutral-700" id="apikey" onChange={(e) => {
                     setApiKey(e.target.value)
                     localStorage.setItem("apikey", e.target.value);
                 }} />
@@ -163,7 +163,6 @@ export default function Users() {
             <button onClick={() => setApiKey("")}>Clear</button>
         </div>
     }
-        
 
     function createUserForm() {
         return <tr>

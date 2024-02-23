@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { API_KEY } from '..';
+import { API_KEY } from '../index';
   
 type AuthenticatedRequest = Request & {
     apiKey?: String;
