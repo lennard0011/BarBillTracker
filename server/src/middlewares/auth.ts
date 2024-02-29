@@ -1,9 +1,10 @@
 import { Request, Response, NextFunction } from 'express';
-import { API_KEY } from '../index';
   
 type AuthenticatedRequest = Request & {
     apiKey?: String;
 }
+
+const API_KEY = process.env.API_KEY;
 
 // Authentication middleware
 export function authenticateUser(req: AuthenticatedRequest, res: Response, next: NextFunction) {

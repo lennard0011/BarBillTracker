@@ -1,4 +1,4 @@
-import express, { Express, Request, Response } from 'express';
+import express, { Express } from 'express';
 import dotenv from 'dotenv';
 import { connect } from 'mongoose';
 import cors from 'cors';
@@ -14,7 +14,6 @@ app.use(express.json())
 
 const PORT = process.env.PORT;
 const MONGO_URL = process.env.MONGO_URL;
-export const API_KEY = process.env.API_KEY;
 
 app.use('/people', peopleRouter);
 
