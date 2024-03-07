@@ -1,4 +1,11 @@
 runtime: nodejs18
+
+instance_class: F1
+
 env_variables:
   API_KEY: "apiKey"
   MONGO_URL: "mongUrl"
+
+automatic_scaling:
+  min_instances: 0
+  max_instances: 2

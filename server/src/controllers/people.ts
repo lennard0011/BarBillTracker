@@ -6,7 +6,7 @@ const peopleService = new PeopleService();
 
 export async function getPeople(_: Request, res: Response) {
     try {
-        const foundPeople = peopleService.get();
+        const foundPeople = await peopleService.get();
         res.json(foundPeople);
     } catch {
         res.status(400);
@@ -15,7 +15,7 @@ export async function getPeople(_: Request, res: Response) {
 
 export async function getPerson(req: Request, res: Response) {
     const id = req.params.id;
-    const foundPeople = peopleService.get(id);
+    const foundPeople = await peopleService.get(id);
     res.json(foundPeople);
 }
 
