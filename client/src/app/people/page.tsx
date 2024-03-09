@@ -90,10 +90,10 @@ export default function Users() {
             body: JSON.stringify(newUser),
             headers: { "Content-Type": "application/json", "api-key": apiKey }
         })
-        const createdUserBody = await newUserResponse.json()
+        const { id } = await newUserResponse.json()
         const createdUser: User = {
-            ...createdUserBody,
-            id: createdUserBody._id
+            ...newUser,
+            id,
         }
         setUsers((users) => [...users, createdUser]);
         setNewUser(initialNewUser);

@@ -29,7 +29,7 @@ export async function createPerson(req: Request, res: Response) {
     try {
         const personToCreate = req.body;
         const id = await peopleService.create(personToCreate);
-        res.json(id);
+        res.json({ id });
     } catch {
         res.status(400);
     }
