@@ -6,9 +6,9 @@ export type Commute = {
     endDateTime: Date;
 }
 
-const commuteSchema = new Schema<Commute>({
+const commuteSchema = new Schema({
     startDateTime: { type: Date, required: true },
     endDateTime: { type: Date },
 });
 
-export const CommuteModel = model<Commute>('Commute', commuteSchema);
+export const CommuteModel = model('Commute', commuteSchema);

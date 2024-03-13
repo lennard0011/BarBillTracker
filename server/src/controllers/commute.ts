@@ -9,8 +9,8 @@ export async function getCommutes(_: Request, res: Response) {
         res.json(commutes);
     } catch {
         res.status(400);
+        res.send();
     }
-    res.send();
 }
 
 export async function getOpenCommute(_: Request, res: Response) {
@@ -19,8 +19,8 @@ export async function getOpenCommute(_: Request, res: Response) {
         res.json(openCommute);
     } catch {
         res.status(400);
+        res.send();
     }
-    res.send();
 }
 
 export async function createCommute(_: Request, res: Response) {
@@ -29,8 +29,8 @@ export async function createCommute(_: Request, res: Response) {
         res.json({ id });
     } catch {
         res.status(400);
+        res.send();
     }
-    res.send();
 }
 
 export async function closeCommute(_: Request, res: Response) {
