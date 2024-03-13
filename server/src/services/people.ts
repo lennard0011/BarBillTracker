@@ -1,4 +1,4 @@
-import {Person, PersonModel} from "../models/Person";
+import { Person, PersonModel } from "../models/person";
 
 export type CreatePersonDto = {
     firstname: string;

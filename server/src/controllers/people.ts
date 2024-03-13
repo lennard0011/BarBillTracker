@@ -1,5 +1,4 @@
 import { Request, Response } from 'express';
-import { PersonModel } from "../models/Person";
 import PeopleService, { CreatePersonDto } from '../services/people';
 
 const peopleService = new PeopleService();
