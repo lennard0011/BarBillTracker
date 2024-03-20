@@ -4,3 +4,5 @@ This application build on MERN is used to track the consumtion of members at a b
 Currently you are able to create and delete users.
 
 ![Alt text](documentation/images/example-of-app.png)
+
+Next to that, you can now track the commute time to work. 
