@@ -54,7 +54,8 @@ const mapCommuteToDto = (commute: Commute): GetCommuteDto => {
 }
 
 const calculateDuration = (startDateTime: Date | null, endDateTime: Date | null): number | null => {
-    if (!startDateTime || !endDateTime) return null;
+    if (!startDateTime) return null;
+    if (!endDateTime) return (new Date().getTime() - startDateTime.getTime()) / 1000;
     return (endDateTime.getTime() - startDateTime.getTime()) / 1000
 }
 
