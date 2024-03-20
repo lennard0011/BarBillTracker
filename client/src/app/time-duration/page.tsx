@@ -139,7 +139,7 @@ const CommutePage: React.FC = () => {
                         <td className="border border-slate-700">{commute.startDateTime?.toLocaleString()}</td>
                         <td>/</td>
                         <td className="border border-slate-700">{commute.endDateTime?.toLocaleString()}</td>
-                        <td className="border border-slate-700">{commute.durationInSeconds ? (commute.durationInSeconds / 3600).toFixed(1) : null} m</td>
+                        <td className="border border-slate-700">{commute.durationInSeconds ? secondsToMinutes(commute.durationInSeconds) : null} m</td>
                         <td className="border border-slate-700"><button onClick={() => deleteCommute(commute.id)}>❌</button></td>
                     </tr>
                 })}
@@ -172,3 +172,6 @@ const CommutePage: React.FC = () => {
 
 export default CommutePage;
 
+function secondsToMinutes(seconds: number) {
+    return (seconds / 60).toFixed(1);
+}
