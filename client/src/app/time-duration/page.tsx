@@ -113,24 +113,24 @@ const CommutePage: React.FC = () => {
     }
 
     function CommuteTable() {
-        return <table>
+        return <table className='border-separate border-spacing-2 border border-slate-500'>
             <thead>
                 <tr>
-                    <th>Start</th>
+                    <th className="border border-slate-600">Start</th>
                     <th> </th>
-                    <th>End</th>
-                    <th>Duration</th>                    
-                    <th>Delete</th>
+                    <th className="border border-slate-600">End</th>
+                    <th className="border border-slate-600">Duration</th>                    
+                    <th className="border border-slate-600">Delete</th>
                 </tr>
             </thead>
             <tbody>
                 {commutes.map((commute: Commute) => {
                     return <tr key={commute.id}>
-                        <td>{commute.startDateTime?.toLocaleString()}</td>
+                        <td className="border border-slate-700">{commute.startDateTime?.toLocaleString()}</td>
                         <td>/</td>
-                        <td>{commute.endDateTime?.toLocaleString()}</td>
-                        <td>{commute.durationInSeconds ? (commute.durationInSeconds / 3600).toFixed(1) : null} m</td>
-                        <td><button onClick={() => deleteCommute(commute.id)}>❌</button></td>
+                        <td className="border border-slate-700">{commute.endDateTime?.toLocaleString()}</td>
+                        <td className="border border-slate-700">{commute.durationInSeconds ? (commute.durationInSeconds / 3600).toFixed(1) : null} m</td>
+                        <td className="border border-slate-700"><button onClick={() => deleteCommute(commute.id)}>❌</button></td>
                     </tr>
                 })}
             </tbody>
