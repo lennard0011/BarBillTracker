@@ -24,7 +24,7 @@ type Commute = {
 
 const CommutePage: React.FC = () => {
     const [apiKey, setApiKey] = useState<string>("");
-    const [loadingCommutesState, setIsLoadingCommutes] = useState<LoadingState>(LoadingState.loading);
+    const [_, setIsLoadingCommutes] = useState<LoadingState>(LoadingState.loading);
     const [isTimerRunning, setIsTimerRunning] = useState(false);
     const [commutes, setCommutes] = useState([]);
 
@@ -73,19 +73,31 @@ const CommutePage: React.FC = () => {
         return () => {
             clearTimeout(timeoutId);
         };
-    }, [apiDomain, apiKey]);
+    }, [apiDomain, apiKey, isTimerRunning]);
 
-    const startTimer = () => {
-        // Send request to start the timer to the backend
-        // You can use fetch or any other library for making HTTP requests
-        // Example: fetch('/api/start-timer');
+    const startTimer = async () => {
+        await fetch(`${apiDomain}/commute`, {
+            method: "POST",
+            headers: { "api-key": apiKey}
+            });
         setIsTimerRunning(true);
     };
 
-    const stopTimer = () => {
-        // Send request to stop the timer to the backend
-        // Example: fetch('/api/stop-timer');
+    const stopTimer = async () => {
+        await fetch(`${apiDomain}/commute/close`, {
+            method: "PUT",
+            headers: { "api-key": apiKey}
+        });
         setIsTimerRunning(false);
+    };
+
+    const deleteCommute = async (id: string) => {
+        await fetch(`${apiDomain}/commute/${id}`, {
+            method: "DELETE",
+            headers: { "api-key": apiKey
+            }
+        });
+        setCommutes((commutes) => commutes.filter((commute: Commute) => commute.id !== id));
     };
 
     function ApiKeyField() {
@@ -107,8 +119,8 @@ const CommutePage: React.FC = () => {
                     <th>Start</th>
                     <th> </th>
                     <th>End</th>
-                    <th> </th>
-                    <th>Duration</th>
+                    <th>Duration</th>                    
+                    <th>Delete</th>
                 </tr>
             </thead>
             <tbody>
@@ -117,8 +129,8 @@ const CommutePage: React.FC = () => {
                         <td>{commute.startDateTime?.toLocaleString()}</td>
                         <td>/</td>
                         <td>{commute.endDateTime?.toLocaleString()}</td>
-                        <td>/</td>
-                        <td>{commute.durationInSeconds ? commute.durationInSeconds / 60 : null}</td>
+                        <td>{commute.durationInSeconds ? (commute.durationInSeconds / 3600).toFixed(1) : null} m</td>
+                        <td><button onClick={() => deleteCommute(commute.id)}>❌</button></td>
                     </tr>
                 })}
             </tbody>
@@ -149,3 +161,4 @@ const CommutePage: React.FC = () => {
 };
 
 export default CommutePage;
+

@@ -16,18 +16,20 @@ class CommuteService {
             if (!commute) return null;
             return mapCommuteToDto(commute.toObject());
         }
-        const commutes = await CommuteModel.find();
-        console.log(typeof commutes[0]?.startDateTime);
-        return commutes.map((commute) => commute.toObject).map(mapCommuteToDto);
+        const commutes = await CommuteModel.find();        
+        return commutes.map((commute) => commute.toObject() as Commute).map(mapCommuteToDto);
     }
 
     async getOpenCommute(): Promise<GetCommuteDto | null> {
         const commute = await CommuteModel.findOne({ endDateTime: null });
         if (!commute) return null;
-        return mapCommuteToDto(commute);
+        return mapCommuteToDto(commute.toObject());
     }
 
     async create(): Promise<string> {
+        const openCommute = await this.getOpenCommute();
+        if (openCommute) throw new Error("There is already an open commute");
+        
         const startDateTime = new Date();
         const createdCommute = await CommuteModel.create({ startDateTime, endDateTime: null });
         return createdCommute.id;
@@ -53,7 +55,7 @@ const mapCommuteToDto = (commute: Commute): GetCommuteDto => {
 
 const calculateDuration = (startDateTime: Date | null, endDateTime: Date | null): number | null => {
     if (!startDateTime || !endDateTime) return null;
-    return endDateTime.getTime() - startDateTime.getTime() / 1000
+    return (endDateTime.getTime() - startDateTime.getTime()) / 1000
 }
 
 export default CommuteService;
