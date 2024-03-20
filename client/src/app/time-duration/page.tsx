@@ -34,11 +34,11 @@ const CommutePage: React.FC = () => {
         let timeoutId: string | number | NodeJS.Timeout | undefined;
 
         const fetchCommutes = async () => {
-            const usersDataResponse = await fetch(`${apiDomain}/commute`, {
+            const commuteDataResponse = await fetch(`${apiDomain}/commute`, {
                 method: "GET",
                 headers: { "api-key": apiKey }
             })
-            const commutesExteral = await usersDataResponse.json()
+            const commutesExteral = await commuteDataResponse.json()
             const commutesDataFormatted = commutesExteral.map((userData: getCommuteDto) => {
                 const formattedCommute: Commute = {
                     id: userData.id,
@@ -50,6 +50,16 @@ const CommutePage: React.FC = () => {
             })
 
             setCommutes(commutesDataFormatted);
+
+            const openCommuteResponse = await fetch(`${apiDomain}/commute/open`, {
+                method: "GET",
+                headers: { "api-key": apiKey }
+            });
+            const openCommute = await openCommuteResponse.json();
+            if (openCommute) {
+                setIsTimerRunning(true);
+            }
+
             setIsLoadingCommutes(LoadingState.success);
         }
 
